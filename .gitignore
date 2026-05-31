@@ -1,3 +1,43 @@
-artifacts/
-bin/
-obj/
+# Build output. These folders are recreated by dotnet build/publish
+# and should not be uploaded to GitHub.
+[Bb]in/
+[Oo]bj/
+[Aa]rtifacts/
+publish/
+
+# Visual Studio / Rider / VS Code local state.
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.rsuser
+
+# NuGet/package output. The project uses NuGet.Config, but packages
+# and generated lock/cache files are local build artifacts.
+packages/
+*.nupkg
+*.snupkg
+project.lock.json
+
+# Logs and temporary files.
+*.log
+*.tmp
+*.temp
+TestResult*/
+TestResults/
+
+# Keep the actual project files, models and image assets tracked.
+!*.csproj
+!*.sln
+!NuGet.Config
+!App.xaml
+!MainWindow.xaml
+!SettingsWindow.xaml
+!*.cs
+!Models/
+!Models/**/*.cs
+!assets/
+!assets/**/*.png
