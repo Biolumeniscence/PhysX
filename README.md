@@ -31,7 +31,7 @@ dotnet run -- --smoke-test
 Если хочется пользоваться батником локально:
 
 ```cmd
-Run-PhysX.cmd
+Run-PhysX.bat
 ```
 
 Скрипт сначала публикует проект как single-file `PhysX.exe`, потом запускает готовое приложение.
@@ -73,7 +73,7 @@ dotnet run
 - `Models/Topic.cs` - модель раздела.
 - `Models/LearningOption.cs` - модель карточек внутри учебных разделов.
 - `Models/LessonPage.cs` - модель страниц теоретического урока.
-- `Run-PhysX.cmd` - локальный запуск через single-file публикацию.
+- `Run-PhysX.bat` - локальный запуск через single-file публикацию.
 - `NuGet.Config` - источник NuGet для восстановления проекта.
 - `assets/topic-atlas.png` - общий атлас изображений для кнопок.
 - `assets/two-positive-particles.png` / `assets/two-negative-particles.png` - изображения для урока по электростатике.
