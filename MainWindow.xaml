@@ -221,37 +221,30 @@
 
                     <Border Grid.Column="0" Margin="0,0,6,0" CornerRadius="22" Background="#FFF4F4" ClipToBounds="True">
                         <Image Source="pack://application:,,,/assets/two-positive-particles.png"
-                               Stretch="UniformToFill" />
+                               Stretch="UniformToFill"
+                               Cursor="Hand"
+                               ToolTip="Открыть крупно"
+                               Tag="pack://application:,,,/assets/two-positive-particles.png"
+                               MouseLeftButtonUp="OpenImagePreview" />
                     </Border>
 
                     <Border Grid.Column="1" Margin="6,0,0,0" CornerRadius="22" Background="#EEF6FF" ClipToBounds="True">
                         <Image Source="pack://application:,,,/assets/two-negative-particles.png"
-                               Stretch="UniformToFill" />
+                               Stretch="UniformToFill"
+                               Cursor="Hand"
+                               ToolTip="Открыть крупно"
+                               Tag="pack://application:,,,/assets/two-negative-particles.png"
+                               MouseLeftButtonUp="OpenImagePreview" />
                     </Border>
                 </Grid>
 
-                <Border Grid.Row="1" CornerRadius="24" Background="#F7FBFF">
-                    <Viewbox Stretch="Uniform">
-                        <Canvas Width="420" Height="155">
-                            <TextBlock Canvas.Left="20" Canvas.Top="10" Text="+ и -: притяжение, линии поля идут от + к -" FontWeight="Black" Foreground="#164B8F" />
-                            <Path Data="M 154 80 C 184 22, 236 22, 266 80" Stroke="#E64646" StrokeThickness="3" Fill="Transparent" />
-                            <Path Data="M 154 80 C 184 138, 236 138, 266 80" Stroke="#2F6FE4" StrokeThickness="3" Fill="Transparent" />
-                            <Line X1="176" Y1="80" X2="244" Y2="80" Stroke="#1D9BD1" StrokeThickness="3" />
-                            <TextBlock Canvas.Left="238" Canvas.Top="64" Text="→" FontSize="26" FontWeight="Black" Foreground="#1D9BD1" />
-                            <TextBlock Canvas.Left="205" Canvas.Top="28" Text="→" FontSize="22" FontWeight="Black" Foreground="#E64646" />
-                            <TextBlock Canvas.Left="205" Canvas.Top="104" Text="→" FontSize="22" FontWeight="Black" Foreground="#2F6FE4" />
-                            <TextBlock Canvas.Left="114" Canvas.Top="63" Text="→" FontSize="32" FontWeight="Black" Foreground="#164B8F" />
-                            <TextBlock Canvas.Left="284" Canvas.Top="63" Text="←" FontSize="32" FontWeight="Black" Foreground="#164B8F" />
-                            <Grid Canvas.Left="122" Canvas.Top="50" Width="62" Height="62">
-                                <Ellipse Fill="#E64646" Stroke="#9E1F1F" StrokeThickness="3" />
-                                <TextBlock Text="+" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="34" FontWeight="Black" Foreground="White" />
-                            </Grid>
-                            <Grid Canvas.Left="236" Canvas.Top="50" Width="62" Height="62">
-                                <Ellipse Fill="#2F6FE4" Stroke="#174AA5" StrokeThickness="3" />
-                                <TextBlock Text="-" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="38" FontWeight="Black" Foreground="White" />
-                            </Grid>
-                        </Canvas>
-                    </Viewbox>
+                <Border Grid.Row="1" CornerRadius="24" Background="#F7FBFF" ClipToBounds="True">
+                    <Image Source="pack://application:,,,/assets/positive-negative-attraction.png"
+                           Stretch="UniformToFill"
+                           Cursor="Hand"
+                           ToolTip="Открыть крупно"
+                           Tag="pack://application:,,,/assets/positive-negative-attraction.png"
+                           MouseLeftButtonUp="OpenImagePreview" />
                 </Border>
             </Grid>
         </DataTemplate>
@@ -263,36 +256,115 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="0" Margin="0,0,0,10" CornerRadius="24" Background="#FFF7ED">
+                <Border Grid.Row="0" Margin="0,0,0,10" CornerRadius="24" Background="#FFF7ED" ClipToBounds="True">
+                    <Image Source="pack://application:,,,/assets/polarization-positive-external.png"
+                           Stretch="Uniform"
+                           Cursor="Hand"
+                           ToolTip="Открыть крупно"
+                           Tag="pack://application:,,,/assets/polarization-positive-external.png"
+                           MouseLeftButtonUp="OpenImagePreview" />
+                </Border>
+
+                <Border Grid.Row="1" CornerRadius="24" Background="#EEF6FF" ClipToBounds="True">
+                    <Image Source="pack://application:,,,/assets/polarization-negative-external.png"
+                           Stretch="Uniform"
+                           Cursor="Hand"
+                           ToolTip="Открыть крупно"
+                           Tag="pack://application:,,,/assets/polarization-negative-external.png"
+                           MouseLeftButtonUp="OpenImagePreview" />
+                </Border>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="CurrentFlowVisual">
+            <Grid Margin="10">
+                <Border CornerRadius="24" Background="#EEF6FF">
                     <Viewbox Stretch="Uniform">
-                        <Canvas Width="430" Height="155">
-                            <TextBlock Canvas.Left="20" Canvas.Top="12" Text="одноименный внешний заряд: такие же заряды уходят дальше" FontWeight="Black" Foreground="#92400E" />
-                            <Grid Canvas.Left="34" Canvas.Top="54" Width="58" Height="58">
-                                <Ellipse Fill="#E64646" Stroke="#9E1F1F" StrokeThickness="3" />
-                                <TextBlock Text="+" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" FontWeight="Black" Foreground="White" />
-                            </Grid>
-                            <TextBlock Canvas.Left="98" Canvas.Top="65" Text="→" FontSize="32" FontWeight="Black" Foreground="#92400E" />
-                            <Ellipse Canvas.Left="190" Canvas.Top="38" Width="122" Height="92" Fill="#FFFFFF" Stroke="#AEB8C2" StrokeThickness="3" />
-                            <TextBlock Canvas.Left="205" Canvas.Top="68" Text="-" FontSize="28" FontWeight="Black" Foreground="#2F6FE4" />
-                            <TextBlock Canvas.Left="236" Canvas.Top="68" Text="0" FontSize="24" FontWeight="Black" Foreground="#7B8794" />
-                            <TextBlock Canvas.Left="276" Canvas.Top="68" Text="+" FontSize="28" FontWeight="Black" Foreground="#E64646" />
+                        <Canvas Width="430" Height="250">
+                            <TextBlock Canvas.Left="24" Canvas.Top="18" Text="направленное движение зарядов" FontWeight="Black" Foreground="#164B8F" />
+                            <Rectangle Canvas.Left="54" Canvas.Top="106" Width="322" Height="44" RadiusX="22" RadiusY="22" Fill="#DBEAFE" Stroke="#1D63C9" StrokeThickness="4" />
+                            <TextBlock Canvas.Left="88" Canvas.Top="83" Text="e-" FontSize="22" FontWeight="Black" Foreground="#1D63C9" />
+                            <TextBlock Canvas.Left="152" Canvas.Top="154" Text="e-" FontSize="22" FontWeight="Black" Foreground="#1D63C9" />
+                            <TextBlock Canvas.Left="220" Canvas.Top="83" Text="e-" FontSize="22" FontWeight="Black" Foreground="#1D63C9" />
+                            <TextBlock Canvas.Left="290" Canvas.Top="154" Text="e-" FontSize="22" FontWeight="Black" Foreground="#1D63C9" />
+                            <Line X1="94" Y1="128" X2="336" Y2="128" Stroke="#116D87" StrokeThickness="5" />
+                            <TextBlock Canvas.Left="326" Canvas.Top="103" Text="→" FontSize="38" FontWeight="Black" Foreground="#116D87" />
+                            <TextBlock Canvas.Left="118" Canvas.Top="184" Text="I - сила тока" FontSize="24" FontWeight="Black" Foreground="#111820" />
                         </Canvas>
                     </Viewbox>
                 </Border>
+            </Grid>
+        </DataTemplate>
 
-                <Border Grid.Row="1" CornerRadius="24" Background="#EEF6FF">
+        <DataTemplate x:Key="ClosedCircuitVisual">
+            <Grid Margin="10">
+                <Border CornerRadius="24" Background="#F0FDF4">
                     <Viewbox Stretch="Uniform">
-                        <Canvas Width="430" Height="155">
-                            <TextBlock Canvas.Left="20" Canvas.Top="12" Text="разноименный внешний заряд: ближняя сторона становится противоположной" FontWeight="Black" Foreground="#164B8F" />
-                            <Grid Canvas.Left="34" Canvas.Top="54" Width="58" Height="58">
-                                <Ellipse Fill="#2F6FE4" Stroke="#174AA5" StrokeThickness="3" />
-                                <TextBlock Text="-" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36" FontWeight="Black" Foreground="White" />
-                            </Grid>
-                            <TextBlock Canvas.Left="98" Canvas.Top="65" Text="→" FontSize="32" FontWeight="Black" Foreground="#164B8F" />
-                            <Ellipse Canvas.Left="190" Canvas.Top="38" Width="122" Height="92" Fill="#FFFFFF" Stroke="#AEB8C2" StrokeThickness="3" />
-                            <TextBlock Canvas.Left="205" Canvas.Top="68" Text="+" FontSize="28" FontWeight="Black" Foreground="#E64646" />
-                            <TextBlock Canvas.Left="236" Canvas.Top="68" Text="0" FontSize="24" FontWeight="Black" Foreground="#7B8794" />
-                            <TextBlock Canvas.Left="276" Canvas.Top="68" Text="-" FontSize="28" FontWeight="Black" Foreground="#2F6FE4" />
+                        <Canvas Width="430" Height="250">
+                            <TextBlock Canvas.Left="24" Canvas.Top="18" Text="ток идет только по замкнутой цепи" FontWeight="Black" Foreground="#245B3C" />
+                            <Path Data="M 100 125 L 170 125 M 260 125 L 330 125 M 330 125 L 330 190 L 100 190 L 100 125"
+                                  Stroke="#2F8F5B" StrokeThickness="8" Fill="Transparent" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
+                            <Line X1="170" Y1="125" X2="260" Y2="125" Stroke="#2F8F5B" StrokeThickness="8" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
+                            <Rectangle Canvas.Left="86" Canvas.Top="94" Width="28" Height="62" RadiusX="6" RadiusY="6" Fill="#FFFFFF" Stroke="#245B3C" StrokeThickness="4" />
+                            <TextBlock Canvas.Left="79" Canvas.Top="72" Text="источник" FontSize="15" FontWeight="Bold" Foreground="#245B3C" />
+                            <Ellipse Canvas.Left="193" Canvas.Top="94" Width="44" Height="44" Fill="#FDE68A" Stroke="#D8A313" StrokeThickness="4" />
+                            <TextBlock Canvas.Left="184" Canvas.Top="72" Text="лампа" FontSize="15" FontWeight="Bold" Foreground="#7A4B00" />
+                            <TextBlock Canvas.Left="282" Canvas.Top="148" Text="ключ" FontSize="15" FontWeight="Bold" Foreground="#245B3C" />
+                            <TextBlock Canvas.Left="252" Canvas.Top="86" Text="→" FontSize="34" FontWeight="Black" Foreground="#116D87" />
+                        </Canvas>
+                    </Viewbox>
+                </Border>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="OhmLawVisual">
+            <Grid Margin="10">
+                <Border CornerRadius="24" Background="#F8F4FF">
+                    <Viewbox Stretch="Uniform">
+                        <Canvas Width="430" Height="250">
+                            <TextBlock Canvas.Left="26" Canvas.Top="18" Text="напряжение толкает, сопротивление мешает" FontWeight="Black" Foreground="#4C1D95" />
+                            <Line X1="56" Y1="132" X2="372" Y2="132" Stroke="#7A3FD1" StrokeThickness="6" />
+                            <TextBlock Canvas.Left="56" Canvas.Top="96" Text="U" FontSize="34" FontWeight="Black" Foreground="#7A3FD1" />
+                            <TextBlock Canvas.Left="96" Canvas.Top="104" Text="→" FontSize="34" FontWeight="Black" Foreground="#7A3FD1" />
+                            <Rectangle Canvas.Left="178" Canvas.Top="106" Width="84" Height="52" RadiusX="10" RadiusY="10" Fill="#FFFFFF" Stroke="#C64D72" StrokeThickness="4" />
+                            <TextBlock Canvas.Left="206" Canvas.Top="116" Text="R" FontSize="30" FontWeight="Black" Foreground="#C64D72" />
+                            <TextBlock Canvas.Left="296" Canvas.Top="98" Text="I" FontSize="34" FontWeight="Black" Foreground="#116D87" />
+                            <TextBlock Canvas.Left="324" Canvas.Top="104" Text="→" FontSize="34" FontWeight="Black" Foreground="#116D87" />
+                            <TextBlock Canvas.Left="140" Canvas.Top="180" Text="I = U / R" FontSize="30" FontFamily="Cambria Math" FontWeight="Black" Foreground="#111820" />
+                        </Canvas>
+                    </Viewbox>
+                </Border>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="CircuitTypesVisual">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Margin="0,0,8,0" CornerRadius="24" Background="#EEF6FF">
+                    <Viewbox Stretch="Uniform">
+                        <Canvas Width="210" Height="230">
+                            <TextBlock Canvas.Left="22" Canvas.Top="18" Text="последовательно" FontWeight="Black" Foreground="#164B8F" />
+                            <Line X1="38" Y1="116" X2="172" Y2="116" Stroke="#1D63C9" StrokeThickness="6" />
+                            <Rectangle Canvas.Left="68" Canvas.Top="94" Width="34" Height="44" RadiusX="8" RadiusY="8" Fill="White" Stroke="#1D63C9" StrokeThickness="4" />
+                            <Rectangle Canvas.Left="116" Canvas.Top="94" Width="34" Height="44" RadiusX="8" RadiusY="8" Fill="White" Stroke="#1D63C9" StrokeThickness="4" />
+                            <TextBlock Canvas.Left="42" Canvas.Top="158" Text="один путь" FontWeight="Bold" Foreground="#164B8F" />
+                        </Canvas>
+                    </Viewbox>
+                </Border>
+                <Border Grid.Column="1" Margin="8,0,0,0" CornerRadius="24" Background="#ECFDF3">
+                    <Viewbox Stretch="Uniform">
+                        <Canvas Width="210" Height="230">
+                            <TextBlock Canvas.Left="24" Canvas.Top="18" Text="параллельно" FontWeight="Black" Foreground="#245B3C" />
+                            <Line X1="44" Y1="82" X2="44" Y2="154" Stroke="#2F8F5B" StrokeThickness="6" />
+                            <Line X1="166" Y1="82" X2="166" Y2="154" Stroke="#2F8F5B" StrokeThickness="6" />
+                            <Line X1="44" Y1="92" X2="166" Y2="92" Stroke="#2F8F5B" StrokeThickness="6" />
+                            <Line X1="44" Y1="144" X2="166" Y2="144" Stroke="#2F8F5B" StrokeThickness="6" />
+                            <Rectangle Canvas.Left="88" Canvas.Top="72" Width="34" Height="40" RadiusX="8" RadiusY="8" Fill="White" Stroke="#2F8F5B" StrokeThickness="4" />
+                            <Rectangle Canvas.Left="88" Canvas.Top="124" Width="34" Height="40" RadiusX="8" RadiusY="8" Fill="White" Stroke="#2F8F5B" StrokeThickness="4" />
+                            <TextBlock Canvas.Left="38" Canvas.Top="178" Text="несколько ветвей" FontWeight="Bold" Foreground="#245B3C" />
                         </Canvas>
                     </Viewbox>
                 </Border>
@@ -790,6 +862,96 @@
             </ScrollViewer>
 
             <ScrollViewer Grid.Row="1"
+                          Visibility="{Binding ElectricityMenuVisibility}"
+                          VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <Border Padding="22"
+                            Margin="0,0,0,20"
+                            BorderBrush="#D7DEE6"
+                            BorderThickness="1"
+                            CornerRadius="22"
+                            Background="White">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="310" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Электричество"
+                                           Foreground="#111820"
+                                           FontWeight="Black"
+                                           FontSize="34" />
+                                <TextBlock Text="Раздел про ток, напряжение, сопротивление и электрические цепи. В теории уже заложен первый урок про электрический ток."
+                                           Margin="0,10,34,0"
+                                           Foreground="#66717D"
+                                           FontSize="16"
+                                           LineHeight="24"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
+
+                            <Border Grid.Column="1"
+                                    Height="160"
+                                    CornerRadius="18"
+                                    ClipToBounds="True"
+                                    Background="{StaticResource SelectedTopicBrush}" />
+                        </Grid>
+                    </Border>
+
+                    <ItemsControl ItemsSource="{Binding ElectricitySections}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="4" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type models:LearningOption}">
+                                <Button Style="{StaticResource CardButtonStyle}"
+                                        Tag="{Binding}"
+                                        IsEnabled="{Binding IsAvailable}"
+                                        Click="OpenElectricitySection">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="132" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+
+                                        <Border Grid.Row="0" Margin="10,10,10,0" CornerRadius="16" ClipToBounds="True">
+                                            <Border.Background>
+                                                <ImageBrush ImageSource="pack://application:,,,/assets/topic-atlas.png"
+                                                            Viewbox="{Binding TileViewbox}"
+                                                            ViewboxUnits="RelativeToBoundingBox"
+                                                            Stretch="UniformToFill" />
+                                            </Border.Background>
+                                        </Border>
+
+                                        <StackPanel Grid.Row="1" Margin="18,15,18,18">
+                                            <Border Width="44"
+                                                    Height="6"
+                                                    HorizontalAlignment="Left"
+                                                    CornerRadius="4"
+                                                    Background="{Binding AccentBrush}" />
+                                            <TextBlock Text="{Binding Title}"
+                                                       Margin="0,14,0,8"
+                                                       Foreground="#121820"
+                                                       FontWeight="Black"
+                                                       FontSize="20"
+                                                       TextWrapping="Wrap" />
+                                            <TextBlock Text="{Binding Description}"
+                                                       Foreground="#66717D"
+                                                       FontSize="14"
+                                                       LineHeight="21"
+                                                       TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+
+            <ScrollViewer Grid.Row="1"
                           Visibility="{Binding ElectrostaticsMenuVisibility}"
                           VerticalScrollBarVisibility="Auto">
                 <StackPanel>
@@ -890,11 +1052,11 @@
                             CornerRadius="22"
                             Background="White">
                         <StackPanel>
-                            <TextBlock Text="Задания с карточками"
+                            <TextBlock Text="{Binding CardTaskTitle}"
                                        Foreground="#111820"
                                        FontWeight="Black"
                                        FontSize="34" />
-                            <TextBlock Text="Здесь четыре направления карточек. Практический экзамен пока закрыт, потому что задачи ты добавишь позже."
+                            <TextBlock Text="{Binding CardTaskDescription}"
                                        Margin="0,10,0,0"
                                        Foreground="#66717D"
                                        FontSize="16"
@@ -1118,6 +1280,18 @@
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding CurrentLessonPage.VisualKind}" Value="polarization">
                                                     <Setter Property="ContentTemplate" Value="{StaticResource PolarizationVisual}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding CurrentLessonPage.VisualKind}" Value="current-flow">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource CurrentFlowVisual}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding CurrentLessonPage.VisualKind}" Value="closed-circuit">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource ClosedCircuitVisual}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding CurrentLessonPage.VisualKind}" Value="ohm-law">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource OhmLawVisual}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding CurrentLessonPage.VisualKind}" Value="circuit-types">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource CircuitTypesVisual}" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>

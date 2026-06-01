@@ -12,6 +12,9 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     private readonly Stack<NavigationSnapshot> _backStack = new();
     private AppScreen _currentScreen = AppScreen.Home;
     private Topic _selectedTopic;
+    private string _cardTaskDescription = "Здесь четыре направления карточек. Практический экзамен пока закрыт, потому что задачи ты добавишь позже.";
+    private ObservableCollection<LearningOption> _cardTaskGroups = new();
+    private string _cardTaskTitle = "Задания с карточками";
     private string _detailDescription = string.Empty;
     private ObservableCollection<LearningOption> _detailCards = new();
     private string _detailTitle = string.Empty;
@@ -21,8 +24,9 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     public MainWindow()
     {
         Topics = new ObservableCollection<Topic>(CreateTopics());
+        ElectricitySections = new ObservableCollection<LearningOption>(CreateElectricitySections());
         ElectrostaticsSections = new ObservableCollection<LearningOption>(CreateElectrostaticsSections());
-        CardTaskGroups = new ObservableCollection<LearningOption>(CreateCardTaskGroups());
+        CardTaskGroups = new ObservableCollection<LearningOption>(CreateElectrostaticsCardTaskGroups());
         _selectedTopic = Topics[0];
 
         InitializeComponent();
@@ -31,9 +35,40 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     public ObservableCollection<Topic> Topics { get; }
 
+    public ObservableCollection<LearningOption> ElectricitySections { get; }
+
     public ObservableCollection<LearningOption> ElectrostaticsSections { get; }
 
-    public ObservableCollection<LearningOption> CardTaskGroups { get; }
+    public ObservableCollection<LearningOption> CardTaskGroups
+    {
+        get => _cardTaskGroups;
+        private set
+        {
+            _cardTaskGroups = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string CardTaskTitle
+    {
+        get => _cardTaskTitle;
+        private set
+        {
+            _cardTaskTitle = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(HeaderTitle));
+        }
+    }
+
+    public string CardTaskDescription
+    {
+        get => _cardTaskDescription;
+        private set
+        {
+            _cardTaskDescription = value;
+            OnPropertyChanged();
+        }
+    }
 
     public ObservableCollection<LearningOption> DetailCards
     {
@@ -85,18 +120,25 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     public string HeaderTitle => _currentScreen switch
     {
         AppScreen.Home => "Физика в симуляциях",
+        AppScreen.ElectricityMenu => "Электричество",
         AppScreen.ElectrostaticsMenu => "Электростатика",
-        AppScreen.CardTasksMenu => "Задания с карточками",
+        AppScreen.CardTasksMenu => CardTaskTitle,
         AppScreen.DetailPage => DetailTitle,
-        AppScreen.ChargeLesson => "Электрический заряд",
+        AppScreen.ChargeLesson => DetailTitle,
         _ => "PhysX",
     };
+
+    public string CardTaskHeaderTitle => CardTaskTitle;
 
     public string StartButtonText => $"Открыть: {SelectedTopic.Title}";
 
     public bool CanGoBack => _backStack.Count > 0;
 
     public Visibility HomeVisibility => _currentScreen == AppScreen.Home
+        ? Visibility.Visible
+        : Visibility.Collapsed;
+
+    public Visibility ElectricityMenuVisibility => _currentScreen == AppScreen.ElectricityMenu
         ? Visibility.Visible
         : Visibility.Collapsed;
 
@@ -140,10 +182,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
         if (SelectedTopic.Id == "electricity")
         {
-            ShowDetailPage(
-                "Электричество",
-                "Раздел оставлен как каркас для будущих уроков про ток, напряжение, сопротивление и электрические цепи.",
-                CreateElectricityPlaceholderCards());
+            NavigateTo(AppScreen.ElectricityMenu);
             return;
         }
 
@@ -167,9 +206,13 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 ShowDetailPage(
                     option.Title,
                     "Теория электростатики: заряд, поле, взаимодействие зарядов и поляризация.",
-                    CreateTheoryCards());
+                    CreateElectrostaticsTheoryCards());
                 break;
             case "cards":
+                SetCardTasks(
+                    "Задания с карточками",
+                    "Карточки по электростатике: знаки зарядов, обозначения, поле и сила. Практический экзамен пока закрыт.",
+                    CreateElectrostaticsCardTaskGroups());
                 NavigateTo(AppScreen.CardTasksMenu);
                 break;
             case "lab":
@@ -183,6 +226,43 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                     option.Title,
                     "Формулы, обозначения и короткие подсказки по электростатике.",
                     CreateReferenceCards());
+                break;
+        }
+    }
+
+    private void OpenElectricitySection(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement { Tag: LearningOption option })
+        {
+            return;
+        }
+
+        switch (option.Id)
+        {
+            case "electricity-theory":
+                ShowDetailPage(
+                    option.Title,
+                    "Теория электричества: ток, напряжение, сопротивление и первые законы цепей.",
+                    CreateElectricityTheoryCards());
+                break;
+            case "electricity-cards":
+                SetCardTasks(
+                    "Задания с карточками",
+                    "Карточки по электрическим цепям: элементы, обозначения, свойства соединений и подготовка к практическому экзамену.",
+                    CreateElectricityCardTaskGroups());
+                NavigateTo(AppScreen.CardTasksMenu);
+                break;
+            case "electricity-lab":
+                ShowDetailPage(
+                    option.Title,
+                    "Будущий конструктор простых цепей: источник, ключ, лампа, резистор и измерительные приборы.",
+                    CreateElectricityLabCards());
+                break;
+            case "electricity-reference":
+                ShowDetailPage(
+                    option.Title,
+                    "Справочник по формулам, обозначениям и единицам для первых задач по электрическим цепям.",
+                    CreateElectricityReferenceCards());
                 break;
         }
     }
@@ -210,6 +290,12 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         if (option.Id == "charge")
         {
             ShowChargeLesson();
+            return;
+        }
+
+        if (option.Id == "current")
+        {
+            ShowElectricCurrentLesson();
             return;
         }
 
@@ -270,6 +356,21 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         settingsWindow.ShowDialog();
     }
 
+    private void OpenImagePreview(object sender, RoutedEventArgs e)
+    {
+        if (sender is not FrameworkElement { Tag: string imageSource })
+        {
+            return;
+        }
+
+        var previewWindow = new ImagePreviewWindow(imageSource, "Просмотр изображения")
+        {
+            Owner = this,
+        };
+
+        previewWindow.ShowDialog();
+    }
+
     private void NavigateTo(AppScreen screen)
     {
         if (_currentScreen == screen)
@@ -298,11 +399,33 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     private void ShowChargeLesson()
     {
         _backStack.Push(CaptureNavigation());
+        DetailTitle = "Электрический заряд";
         _lessonPages = CreateChargeLessonPages().ToArray();
         _lessonPageIndex = 0;
         _currentScreen = AppScreen.ChargeLesson;
         NotifyNavigationChanged();
         NotifyLessonPageChanged();
+    }
+
+    private void ShowElectricCurrentLesson()
+    {
+        _backStack.Push(CaptureNavigation());
+        DetailTitle = "Электрический ток";
+        _lessonPages = CreateElectricCurrentLessonPages().ToArray();
+        _lessonPageIndex = 0;
+        _currentScreen = AppScreen.ChargeLesson;
+        NotifyNavigationChanged();
+        NotifyLessonPageChanged();
+    }
+
+    private void SetCardTasks(
+        string title,
+        string description,
+        IEnumerable<LearningOption> cards)
+    {
+        CardTaskTitle = title;
+        CardTaskDescription = description;
+        CardTaskGroups = new ObservableCollection<LearningOption>(cards);
     }
 
     private NavigationSnapshot CaptureNavigation()
@@ -321,6 +444,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         OnPropertyChanged(nameof(HeaderTitle));
         OnPropertyChanged(nameof(CanGoBack));
         OnPropertyChanged(nameof(HomeVisibility));
+        OnPropertyChanged(nameof(ElectricityMenuVisibility));
         OnPropertyChanged(nameof(ElectrostaticsMenuVisibility));
         OnPropertyChanged(nameof(CardTasksMenuVisibility));
         OnPropertyChanged(nameof(DetailPageVisibility));
@@ -453,7 +577,46 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         };
     }
 
-    private static IEnumerable<LearningOption> CreateCardTaskGroups()
+    private static IEnumerable<LearningOption> CreateElectricitySections()
+    {
+        return new[]
+        {
+            CreateLearningOption(
+                "electricity-theory",
+                "Теория",
+                "Ток, напряжение, сопротивление, закон Ома и первые цепи.",
+                "УРОКИ",
+                true,
+                5,
+                "#1D63C9"),
+            CreateLearningOption(
+                "electricity-cards",
+                "Задания с карточками",
+                "Карточки для запоминания элементов цепи, обозначений и свойств соединений.",
+                "ПРАКТИКА",
+                true,
+                6,
+                "#7A3FD1"),
+            CreateLearningOption(
+                "electricity-lab",
+                "Мини-лаборатория",
+                "Каркас конструктора простых цепей с источником, ключом, лампой и резистором.",
+                "СИМУЛЯЦИЯ",
+                true,
+                2,
+                "#2F8F5B"),
+            CreateLearningOption(
+                "electricity-reference",
+                "Справочник",
+                "Формулы, символы, единицы измерения и быстрые подсказки по цепям.",
+                "СПРАВКА",
+                true,
+                7,
+                "#D8A313"),
+        };
+    }
+
+    private static IEnumerable<LearningOption> CreateElectrostaticsCardTaskGroups()
     {
         return new[]
         {
@@ -492,22 +655,46 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         };
     }
 
-    private static IEnumerable<LearningOption> CreateElectricityPlaceholderCards()
+    private static IEnumerable<LearningOption> CreateElectricityCardTaskGroups()
     {
         return new[]
         {
             CreateLearningOption(
-                "electricity-theory",
-                "Теория",
-                "Пустая плашка под будущие материалы про ток, напряжение, сопротивление и цепи.",
-                "КАРКАС",
+                "circuit-elements",
+                "Элементы цепи",
+                "Источник, ключ, лампа, резистор, проводник и измерительные приборы.",
+                "ПАМЯТЬ",
+                true,
+                0,
+                "#00A6D6"),
+            CreateLearningOption(
+                "electricity-symbols",
+                "Обозначения",
+                "I, U, R, ЭДС, P и другие символы, которые встречаются в задачах.",
+                "СИМВОЛЫ",
+                true,
+                6,
+                "#7A3FD1"),
+            CreateLearningOption(
+                "circuit-knowledge",
+                "Знание цепей",
+                "Последовательное, параллельное и смешанное соединение.",
+                "ТЕОРИЯ",
+                true,
+                2,
+                "#2F8F5B"),
+            CreateLearningOption(
+                "electricity-practical-exam",
+                "Практический экзамен",
+                "Блок под три задания на время. Наполним, когда ты скинешь задачи.",
+                "ОЖИДАЕТ ЗАДАЧ",
                 false,
-                5,
-                "#1D63C9"),
+                4,
+                "#C64D72"),
         };
     }
 
-    private static IEnumerable<LearningOption> CreateTheoryCards()
+    private static IEnumerable<LearningOption> CreateElectrostaticsTheoryCards()
     {
         return new[]
         {
@@ -515,6 +702,17 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             CreateLearningOption("electric-field", "Электрическое поле", "Как заряд создает поле и почему направление показывают от плюса к минусу.", "СКОРО", true, 5, "#1D63C9"),
             CreateLearningOption("coulomb-law", "Закон Кулона", "Как сила зависит от зарядов, расстояния и знаков взаимодействующих тел.", "СКОРО", true, 2, "#7A3FD1"),
             CreateLearningOption("polarization-card", "Поляризация", "Смещение зарядов внутри нейтрального тела рядом с заряженным объектом.", "СКОРО", true, 7, "#C64D72"),
+        };
+    }
+
+    private static IEnumerable<LearningOption> CreateElectricityTheoryCards()
+    {
+        return new[]
+        {
+            CreateLearningOption("current", "Электрический ток", "Направленное движение зарядов, сила тока и условия существования тока.", "УРОК", true, 5, "#1D63C9"),
+            CreateLearningOption("voltage", "Напряжение", "Что показывает U и почему источник энергии заставляет заряды двигаться.", "СКОРО", true, 2, "#7A3FD1"),
+            CreateLearningOption("resistance", "Сопротивление", "Что такое R и как сопротивление влияет на ток в цепи.", "СКОРО", true, 7, "#C64D72"),
+            CreateLearningOption("ohm-law-card", "Закон Ома", "Связь силы тока, напряжения и сопротивления на участке цепи.", "СКОРО", true, 0, "#00A6D6"),
         };
     }
 
@@ -673,6 +871,125 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         };
     }
 
+    private static IEnumerable<LessonPage> CreateElectricCurrentLessonPages()
+    {
+        return new[]
+        {
+            new LessonPage
+            {
+                Id = "current-basics",
+                Title = "Что такое электрический ток",
+                Subtitle = "Ток - это направленное движение заряженных частиц.",
+                Body = "В металлах ток связан с движением свободных электронов. В растворах и газах ток могут переносить ионы. Важно не просто наличие зарядов, а их упорядоченное движение в одну сторону. Если заряды движутся хаотично, как молекулы в теплом теле, электрического тока в цепи еще нет.",
+                FormulaTitle = "Сила тока",
+                Formulas = new[]
+                {
+                    new FormulaItem
+                    {
+                        Kind = "fractionParts",
+                        LeftParts = new[] { T("I =") },
+                        NumeratorParts = new[] { T("Δq") },
+                        DenominatorParts = new[] { T("Δt") },
+                        Explanation = "I показывает, какой заряд Δq проходит через поперечное сечение проводника за время Δt.",
+                    },
+                    new FormulaItem
+                    {
+                        Equation = "1 А = 1 Кл/с",
+                        Explanation = "Один ампер означает, что за одну секунду через сечение проходит заряд один кулон.",
+                    },
+                },
+                KeyPoint = "Главная мысль: ток появляется, когда заряды движутся направленно, а сила тока показывает скорость переноса заряда.",
+                ExampleTitle = "Пример",
+                Example = "Если через лампу за 2 секунды прошел заряд 6 Кл, то сила тока равна 3 А. Чем больше заряд проходит за то же время, тем больше ток.",
+                VisualKind = "current-flow",
+            },
+            new LessonPage
+            {
+                Id = "closed-circuit",
+                Title = "Почему цепь должна быть замкнутой",
+                Subtitle = "Для длительного тока нужен источник энергии и замкнутый путь.",
+                Body = "Источник создает условия для движения зарядов, но ток не пойдет через разрыв. Цепь должна иметь замкнутый путь: источник, проводники, потребитель и возвращение к источнику. Ключ удобен тем, что управляет этим путем: замкнул - ток идет, разомкнул - ток прекращается.",
+                FormulaTitle = "Напряжение как энергия на заряд",
+                Formulas = new[]
+                {
+                    new FormulaItem
+                    {
+                        Kind = "fractionParts",
+                        LeftParts = new[] { T("U =") },
+                        NumeratorParts = new[] { T("A") },
+                        DenominatorParts = new[] { T("q") },
+                        Explanation = "Напряжение U показывает, какую работу A поле или источник совершает при переносе заряда q.",
+                    },
+                    new FormulaItem
+                    {
+                        Equation = "1 В = 1 Дж/Кл",
+                        Explanation = "Один вольт означает один джоуль энергии на один кулон заряда.",
+                    },
+                },
+                KeyPoint = "Без замкнутого пути ток не течет, даже если источник подключен к одному концу провода.",
+                ExampleTitle = "Пример",
+                Example = "Лампа не светится при разомкнутом ключе, потому что у зарядов нет полного пути через цепь. Когда ключ замыкают, путь появляется и ток проходит через лампу.",
+                VisualKind = "closed-circuit",
+            },
+            new LessonPage
+            {
+                Id = "voltage-resistance",
+                Title = "Напряжение, сопротивление и закон Ома",
+                Subtitle = "Напряжение помогает току течь, сопротивление ограничивает ток.",
+                Body = "Напряжение можно воспринимать как причину, которая заставляет заряды двигаться по цепи. Сопротивление показывает, насколько элемент мешает этому движению. Если напряжение увеличить, ток обычно увеличится. Если сопротивление увеличить, ток станет меньше.",
+                FormulaTitle = "Закон Ома для участка цепи",
+                Formulas = new[]
+                {
+                    new FormulaItem
+                    {
+                        Kind = "fractionParts",
+                        LeftParts = new[] { T("I =") },
+                        NumeratorParts = new[] { T("U") },
+                        DenominatorParts = new[] { T("R") },
+                        Explanation = "При постоянном сопротивлении ток прямо пропорционален напряжению.",
+                    },
+                    new FormulaItem
+                    {
+                        Kind = "fractionParts",
+                        LeftParts = new[] { T("R =") },
+                        NumeratorParts = new[] { T("U") },
+                        DenominatorParts = new[] { T("I") },
+                        Explanation = "Так можно найти сопротивление участка, если известны напряжение и сила тока.",
+                    },
+                },
+                KeyPoint = "Закон Ома связывает три главные величины электрических цепей: I, U и R.",
+                ExampleTitle = "Пример",
+                Example = "Если на резисторе напряжение 12 В, а сопротивление 6 Ом, то ток равен 2 А: I = 12 / 6.",
+                VisualKind = "ohm-law",
+            },
+            new LessonPage
+            {
+                Id = "circuit-types",
+                Title = "Последовательные и параллельные цепи",
+                Subtitle = "В одной цепи может быть один путь для тока или несколько ветвей.",
+                Body = "При последовательном соединении элементы стоят один за другим, поэтому через них проходит один и тот же ток. При параллельном соединении цепь делится на ветви: напряжение на ветвях одинаковое, а общий ток складывается из токов по ветвям.",
+                FormulaTitle = "Базовые правила соединений",
+                Formulas = new[]
+                {
+                    new FormulaItem
+                    {
+                        Equation = "Rпосл. = R₁ + R₂ + ...",
+                        Explanation = "При последовательном соединении сопротивления складываются.",
+                    },
+                    new FormulaItem
+                    {
+                        Equation = "Iобщ. = I₁ + I₂ + ...",
+                        Explanation = "При параллельном соединении общий ток равен сумме токов по ветвям.",
+                    },
+                },
+                KeyPoint = "Последовательная цепь дает один путь для тока, параллельная - несколько независимых ветвей.",
+                ExampleTitle = "Пример",
+                Example = "Гирлянда может быть устроена так, что при перегорании одной лампы гаснет вся цепь. Это признак последовательного участка. Домашняя проводка устроена иначе: приборы работают параллельно.",
+                VisualKind = "circuit-types",
+            },
+        };
+    }
+
     private static IEnumerable<LearningOption> CreateLabCards()
     {
         return new[]
@@ -684,6 +1001,17 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         };
     }
 
+    private static IEnumerable<LearningOption> CreateElectricityLabCards()
+    {
+        return new[]
+        {
+            CreateLearningOption("simple-circuit-lab", "Простая цепь", "Источник, ключ, лампа и замкнутый путь для тока.", "КАРКАС", true, 0, "#00A6D6"),
+            CreateLearningOption("resistor-lab", "Резистор", "Будущий опыт с изменением сопротивления и наблюдением за током.", "КАРКАС", true, 2, "#2F8F5B"),
+            CreateLearningOption("lamp-brightness-lab", "Яркость лампы", "Связь напряжения, сопротивления и мощности на простом примере.", "КАРКАС", true, 6, "#D8A313"),
+            CreateLearningOption("measurements-lab", "Измерения", "Амперметр, вольтметр и первые измерения в учебной цепи.", "КАРКАС", true, 5, "#1D63C9"),
+        };
+    }
+
     private static IEnumerable<LearningOption> CreateReferenceCards()
     {
         return new[]
@@ -692,6 +1020,17 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             CreateLearningOption("units-ref", "Единицы", "Кулоны, ньютоны, метры и единицы напряженности поля.", "СПРАВКА", true, 0, "#00A6D6"),
             CreateLearningOption("formulas-ref", "Формулы", "Закон Кулона, напряженность поля и сохранение заряда.", "СПРАВКА", true, 2, "#2F8F5B"),
             CreateLearningOption("sign-rules-ref", "Правила знаков", "Когда заряды притягиваются, отталкиваются и как направлено поле.", "СПРАВКА", true, 7, "#C64D72"),
+        };
+    }
+
+    private static IEnumerable<LearningOption> CreateElectricityReferenceCards()
+    {
+        return new[]
+        {
+            CreateLearningOption("electricity-symbols-ref", "Символы", "I, U, R, epsilon, P и другие обозначения для цепей.", "СПРАВКА", true, 6, "#7A3FD1"),
+            CreateLearningOption("electricity-units-ref", "Единицы", "Амперы, вольты, омы, кулоны, джоули и ватты.", "СПРАВКА", true, 0, "#00A6D6"),
+            CreateLearningOption("electricity-formulas-ref", "Формулы", "Сила тока, закон Ома, мощность и работа тока.", "СПРАВКА", true, 2, "#2F8F5B"),
+            CreateLearningOption("circuit-types-ref", "Типы цепей", "Последовательное, параллельное и смешанное соединение.", "СПРАВКА", true, 7, "#C64D72"),
         };
     }
 
@@ -719,6 +1058,27 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 CreateLearningOption("coulomb-distance", "Расстояние r", "Почему сила уменьшается при увеличении расстояния.", "КАРТОЧКИ", true, 2, "#2F8F5B"),
                 CreateLearningOption("charge-product", "Произведение зарядов", "Как знак q1q2 помогает понять притяжение или отталкивание.", "КАРТОЧКИ", true, 6, "#7A3FD1"),
                 CreateLearningOption("polarization-rule", "Поляризация", "Как заряды смещаются внутри нейтрального тела.", "КАРТОЧКИ", true, 7, "#C64D72"),
+            },
+            "circuit-elements" => new[]
+            {
+                CreateLearningOption("battery-card", "Источник", "Батарейка или источник питания создает напряжение.", "КАРТОЧКИ", true, 0, "#00A6D6"),
+                CreateLearningOption("wire-card", "Проводник", "Путь, по которому заряды могут двигаться по цепи.", "КАРТОЧКИ", true, 2, "#2F8F5B"),
+                CreateLearningOption("switch-card", "Ключ", "Замыкает или размыкает цепь.", "КАРТОЧКИ", true, 5, "#1D63C9"),
+                CreateLearningOption("lamp-card", "Лампа", "Потребитель энергии, который светится при протекании тока.", "КАРТОЧКИ", true, 7, "#D8A313"),
+            },
+            "electricity-symbols" => new[]
+            {
+                CreateLearningOption("i-symbol", "I", "Сила тока: сколько заряда проходит через сечение за секунду.", "КАРТОЧКИ", true, 5, "#1D63C9"),
+                CreateLearningOption("u-symbol", "U", "Напряжение: энергия на единицу заряда.", "КАРТОЧКИ", true, 6, "#7A3FD1"),
+                CreateLearningOption("r-symbol", "R", "Сопротивление: насколько элемент мешает току.", "КАРТОЧКИ", true, 2, "#2F8F5B"),
+                CreateLearningOption("p-symbol", "P", "Мощность: скорость потребления электрической энергии.", "КАРТОЧКИ", true, 7, "#C64D72"),
+            },
+            "circuit-knowledge" => new[]
+            {
+                CreateLearningOption("series-circuit", "Последовательная цепь", "Один путь для тока, одинаковая сила тока на элементах.", "КАРТОЧКИ", true, 0, "#00A6D6"),
+                CreateLearningOption("parallel-circuit", "Параллельная цепь", "Несколько ветвей, одинаковое напряжение на ветвях.", "КАРТОЧКИ", true, 2, "#2F8F5B"),
+                CreateLearningOption("mixed-circuit", "Смешанная цепь", "Комбинация последовательных и параллельных участков.", "КАРТОЧКИ", true, 6, "#7A3FD1"),
+                CreateLearningOption("circuit-safety", "Короткое замыкание", "Опасный путь с очень малым сопротивлением.", "КАРТОЧКИ", true, 7, "#C64D72"),
             },
             _ => Array.Empty<LearningOption>(),
         };
@@ -834,6 +1194,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 public enum AppScreen
 {
     Home,
+    ElectricityMenu,
     ElectrostaticsMenu,
     CardTasksMenu,
     DetailPage,

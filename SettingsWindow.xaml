@@ -59,7 +59,7 @@
                            FontSize="30"
                            FontWeight="Black"
                            Foreground="#20252B" />
-                <TextBlock Text="Окно уже заведено, содержимое оставлено как каркас."
+                <TextBlock Text="Базовые настройки уже разложены по вкладкам. Часть переключателей пока работает как заготовка интерфейса."
                            Margin="0,6,0,0"
                            Foreground="#66717D"
                            FontSize="14" />
@@ -74,9 +74,25 @@
                             Background="White"
                             BorderBrush="#D7DEE6"
                             BorderThickness="1">
-                        <TextBlock Text="Здесь позже будут общие настройки приложения."
-                                   Foreground="#66717D"
-                                   TextWrapping="Wrap" />
+                        <StackPanel>
+                            <CheckBox Content="Открывать последний раздел при запуске"
+                                      Margin="0,0,0,12"
+                                      FontWeight="SemiBold"
+                                      Foreground="#20252B" />
+                            <CheckBox Content="Показывать подтверждение перед выходом"
+                                      Margin="0,0,0,12"
+                                      FontWeight="SemiBold"
+                                      Foreground="#20252B" />
+                            <TextBlock Text="Режим запуска"
+                                       Margin="0,10,0,6"
+                                       Foreground="#66717D"
+                                       FontWeight="Bold" />
+                            <ComboBox SelectedIndex="0" Height="36">
+                                <ComboBoxItem Content="Обычный режим" />
+                                <ComboBoxItem Content="Учебный режим без таймеров" />
+                                <ComboBoxItem Content="Подготовка к проверочной" />
+                            </ComboBox>
+                        </StackPanel>
                     </Border>
                 </TabItem>
                 <TabItem Header="Интерфейс">
@@ -85,9 +101,26 @@
                             Background="White"
                             BorderBrush="#D7DEE6"
                             BorderThickness="1">
-                        <TextBlock Text="Здесь позже будут параметры внешнего вида."
-                                   Foreground="#66717D"
-                                   TextWrapping="Wrap" />
+                        <StackPanel>
+                            <TextBlock Text="Размер текста в уроках"
+                                       Foreground="#66717D"
+                                       FontWeight="Bold" />
+                            <Slider Minimum="14"
+                                    Maximum="22"
+                                    Value="17"
+                                    TickFrequency="1"
+                                    IsSnapToTickEnabled="True"
+                                    Margin="0,8,0,16" />
+                            <CheckBox Content="Открывать учебные изображения в большом окне"
+                                      IsChecked="True"
+                                      Margin="0,0,0,12"
+                                      FontWeight="SemiBold"
+                                      Foreground="#20252B" />
+                            <CheckBox Content="Показывать прогресс страницы в уроке"
+                                      IsChecked="True"
+                                      FontWeight="SemiBold"
+                                      Foreground="#20252B" />
+                        </StackPanel>
                     </Border>
                 </TabItem>
                 <TabItem Header="Обучение">
@@ -96,9 +129,27 @@
                             Background="White"
                             BorderBrush="#D7DEE6"
                             BorderThickness="1">
-                        <TextBlock Text="Здесь позже будут настройки уроков, заданий и таймеров."
-                                   Foreground="#66717D"
-                                   TextWrapping="Wrap" />
+                        <StackPanel>
+                            <CheckBox Content="Перемешивать карточки в заданиях"
+                                      IsChecked="True"
+                                      Margin="0,0,0,12"
+                                      FontWeight="SemiBold"
+                                      Foreground="#20252B" />
+                            <CheckBox Content="Показывать подсказки после ошибки"
+                                      IsChecked="True"
+                                      Margin="0,0,0,12"
+                                      FontWeight="SemiBold"
+                                      Foreground="#20252B" />
+                            <TextBlock Text="Время практического экзамена"
+                                       Margin="0,10,0,6"
+                                       Foreground="#66717D"
+                                       FontWeight="Bold" />
+                            <ComboBox SelectedIndex="1" Height="36">
+                                <ComboBoxItem Content="3 минуты" />
+                                <ComboBoxItem Content="5 минут" />
+                                <ComboBoxItem Content="10 минут" />
+                            </ComboBox>
+                        </StackPanel>
                     </Border>
                 </TabItem>
             </TabControl>
